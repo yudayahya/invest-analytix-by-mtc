@@ -4,25 +4,41 @@ import { ref } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import loginCommand, { formData, validationZodSchema } from '@/commands/login-command'
+import { useToast } from '@/components/ui/toast'
 
 const router = useRouter()
-
 const userStore = useUserStore()
+const { toast } = useToast()
 
 const isLoading = ref(false)
 
-async function onSubmit(event: Event) {
-  event.preventDefault()
+const validationSchema = toTypedSchema(validationZodSchema)
+
+const onSubmit = async () => {
   isLoading.value = true
 
-  setTimeout(() => {
+  try {
     isLoading.value = false
-    userStore.setLogin()
+    const result = await loginCommand.commandInvoke()
+    userStore.setLogin(result.data.email, result.data.created_at)
+    loginCommand.formDataReset()
+
     return router.push({ name: 'home' })
-  }, 1000)
+  } catch (error: any) {
+    isLoading.value = false
+    loginCommand.formDataReset()
+
+    return toast({
+      title: 'Ooopps...',
+      description: error.message || 'an uncaught error occurred',
+      duration: 3000
+    })
+  }
 }
 </script>
 
@@ -55,32 +71,41 @@ async function onSubmit(event: Event) {
           <p class="text-sm text-muted-foreground">Enter your email & password below to sign in</p>
         </div>
         <div class="grid gap-6">
-          <form @submit="onSubmit">
+          <Form :validation-schema="validationSchema" @submit="onSubmit">
             <div class="grid gap-2">
-              <div class="grid gap-1">
-                <Label class="sr-only" for="email"> Email </Label>
+              <div class="grid gap-px">
+                <Field
+                  name="email"
+                  type="email"
+                  class="hidden"
+                  v-model="formData.email"
+                  :validate-on-input="true"
+                />
                 <Input
-                  id="email"
                   placeholder="name@example.com"
                   type="email"
+                  v-model="formData.email"
                   auto-capitalize="none"
                   auto-complete="email"
                   auto-correct="off"
                   autofocus
                 />
+                <ErrorMessage name="email" as="p" class="text-red-500 text-xs" />
               </div>
-              <div class="grid gap-1">
-                <Label class="sr-only" for="password"> Password </Label>
-                <Input placeholder="password" type="password" />
+              <div class="grid gap-px">
+                <Field name="password" type="password" class="hidden" v-model="formData.password" />
+                <Input placeholder="password" type="password" v-model="formData.password" />
+                <ErrorMessage name="password" as="p" class="text-red-500 text-xs" />
               </div>
-              <Button :disabled="isLoading">
+              <Button :disabled="isLoading" type="submit">
                 <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
                 Sign In
               </Button>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
     </div>
   </div>
 </template>
+@/commands/login-command
