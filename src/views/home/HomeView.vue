@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { invoke } from '@tauri-apps/api'
-import HomePage from '@/components/pages/home/HomePage.vue'
+
+type MyRes = {
+  data: string
+}
 
 // now we can call our Command!
 // Right-click the application background and open the developer tools.
 // You will see "Hello, World!" printed in the console!
-invoke('greet', { name: 'World' })
+invoke<MyRes>('sign_in', { data: { email: 'yuda@amalan.org', password: '1234' } })
   // `invoke` returns a Promise
-  .then((response) => console.log(response))
+  .then((r) => console.log(r))
+  .catch((e) => console.log(e))
 </script>
 
 <template>
-  <HomePage />
+  <div>Ini Home</div>
 </template>
