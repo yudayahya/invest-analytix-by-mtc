@@ -11,11 +11,18 @@ async fn main() {
 
     tauri::Builder::default()
         .setup(|_app| {
-            tokio::task::spawn(async move { libs::db::init() });
+            tokio::task::spawn(async move {
+                libs::db::init()
+                    .await
+                    .expect("failed while initializing database");
+            });
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![commands::user::sign_in])
+        .invoke_handler(tauri::generate_handler![
+            commands::user::sign_in,
+            commands::account::create_account
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
