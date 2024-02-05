@@ -1,4 +1,4 @@
-import * as zod from 'zod'
+import { z } from 'zod'
 import { reactive } from 'vue'
 import { InvokeCommand } from '.'
 
@@ -8,9 +8,9 @@ type Response = {
   created_at?: string
 }
 
-export const validationZodSchema = zod.object({
-  email: zod.string().email({ message: 'email tidak valid' }),
-  password: zod.string().min(8, { message: 'minimal 8 karakter' })
+export const validationZodSchema = z.object({
+  email: z.string().email({ message: 'email tidak valid' }),
+  password: z.string().min(8, { message: 'minimal 8 karakter' })
 })
 
 export const formData = reactive({
