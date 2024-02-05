@@ -1,7 +1,6 @@
 import * as zod from 'zod'
 import { reactive } from 'vue'
-import { invoke } from '@tauri-apps/api'
-import { type CommandResponse } from '.'
+import { InvokeCommand } from '.'
 
 type Response = {
   id: number
@@ -24,15 +23,12 @@ const formDataReset = () => {
   formData.password = ''
 }
 
-const commandInvoke = async () => {
-  const result = await invoke<CommandResponse<Response>>('sign_in', {
-    data: { ...formData }
-  })
-
+const formSubmit = async () => {
+  const result = await InvokeCommand<Response>('sign_in', formData)
   return result
 }
 
 export default {
   formDataReset,
-  commandInvoke
+  formSubmit
 }

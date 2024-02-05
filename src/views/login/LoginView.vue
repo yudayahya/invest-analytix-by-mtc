@@ -24,7 +24,7 @@ const onSubmit = async () => {
 
   try {
     isLoading.value = false
-    const result = await loginCommand.commandInvoke()
+    const result = await loginCommand.formSubmit()
     userStore.setLogin(result.data.email, result.data.created_at)
     loginCommand.formDataReset()
 
@@ -108,4 +108,3 @@ const onSubmit = async () => {
     </div>
   </div>
 </template>
-@/commands/login-command
