@@ -32,18 +32,22 @@ const signOut = () => {
 </script>
 
 <template>
-  <div class="rounded-none border-b px-2 py-1 flex justify-between items-center">
+  <div
+    class="fixed z-50 top-0 inset-x-0 bg-background/80 backdrop-blur-sm rounded-none border-b px-2 py-1 flex justify-between items-center"
+  >
     <Menubar class="border-none">
       <MenubarMenu>
-        <MenubarTrigger class="font-bold" @click="console.log('goto Home')">Home</MenubarTrigger>
+        <MenubarTrigger class="font-bold" @click="router.push({ name: 'home' })"
+          >Home</MenubarTrigger
+        >
       </MenubarMenu>
       <MenubarMenu>
         <MenubarTrigger>Akun</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem
+          <MenubarItem @click="router.push({ name: 'account' })"
             >Lihat<MenubarShortcut><User class="w-4" /></MenubarShortcut
           ></MenubarItem>
-          <MenubarItem
+          <MenubarItem @click="router.push({ name: 'account-create' })"
             >Tambah<MenubarShortcut><UserPlus class="w-4" /></MenubarShortcut
           ></MenubarItem>
         </MenubarContent>
