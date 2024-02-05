@@ -29,7 +29,8 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Accounts::Code).string_len(255).not_null())
                     .col(
                         ColumnDef::new(Accounts::Gender)
-                            .enumeration(Gender::Table, Gender::iter().skip(1)),
+                            .enumeration(Gender::Table, Gender::iter().skip(1))
+                            .not_null(),
                     )
                     .col(ColumnDef::new(Accounts::City).string_len(255).null())
                     .col(ColumnDef::new(Accounts::Email).string_len(255).not_null())
@@ -40,7 +41,8 @@ impl MigrationTrait for Migration {
                     )
                     .col(
                         ColumnDef::new(Accounts::Bank)
-                            .enumeration(Bank::Table, Bank::iter().skip(1)),
+                            .enumeration(Bank::Table, Bank::iter().skip(1))
+                            .not_null(),
                     )
                     .col(
                         ColumnDef::new(Accounts::BankAccountNumber)
@@ -54,7 +56,8 @@ impl MigrationTrait for Migration {
                     )
                     .col(
                         ColumnDef::new(Accounts::Post)
-                            .enumeration(Post::Table, Post::iter().skip(1)),
+                            .enumeration(Post::Table, Post::iter().skip(1))
+                            .not_null(),
                     )
                     .col(
                         ColumnDef::new(Accounts::AccountNumber)
@@ -66,13 +69,14 @@ impl MigrationTrait for Migration {
                             .string_len(255)
                             .not_null(),
                     )
-                    .col(ColumnDef::new(Accounts::AccountIB).integer().not_null())
+                    .col(ColumnDef::new(Accounts::AccountIB).integer().null())
                     .col(ColumnDef::new(Accounts::PhoneNumber).string_len(255).null())
                     .col(ColumnDef::new(Accounts::MacAddress).string_len(255).null())
                     .col(ColumnDef::new(Accounts::Bonus).float().null())
                     .col(
                         ColumnDef::new(Accounts::Status)
-                            .enumeration(Status::Table, Status::iter().skip(1)),
+                            .enumeration(Status::Table, Status::iter().skip(1))
+                            .not_null(),
                     )
                     .col(ColumnDef::new(Accounts::CreatedAt).date_time().null())
                     .col(ColumnDef::new(Accounts::UpdatedAt).date_time().null())
