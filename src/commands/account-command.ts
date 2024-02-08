@@ -28,7 +28,7 @@ export const validationZodSchema = z
   .object({
     full_name: z.string().min(1, { message: 'minimal 1 karakter' }),
     code: z.string().min(1, { message: 'minimal 1 karakter' }),
-    gender: z.nativeEnum(GenderEnum, {
+    gender: z.enum(GenderEnum, {
       errorMap: () => {
         return { message: 'Pilih salah satu' }
       }
@@ -39,14 +39,14 @@ export const validationZodSchema = z
       .min(1, { message: 'minimal 1 karakter' })
       .email({ message: 'email tidak valid' }),
     email_password: z.string().min(1, { message: 'minimal 1 karakter' }),
-    bank: z.nativeEnum(BankEnum, {
+    bank: z.enum(BankEnum, {
       errorMap: () => {
         return { message: 'Pilih salah satu' }
       }
     }),
     bank_account_number: z.string().min(1, { message: 'minimal 1 karakter' }),
     internet_bank_account_number: z.string().min(1, { message: 'minimal 1 karakter' }).nullable(),
-    post: z.nativeEnum(PostEnum, {
+    post: z.enum(PostEnum, {
       errorMap: () => {
         return { message: 'Pilih salah satu' }
       }
@@ -57,14 +57,14 @@ export const validationZodSchema = z
     phone_number: z.string().min(1, { message: 'minimal 1 karakter' }).nullable(),
     mac_address: z.string().min(1, { message: 'minimal 1 karakter' }).nullable(),
     bonus: z.number().nullable(),
-    status: z.nativeEnum(StatusEnum, {
+    status: z.enum(StatusEnum, {
       errorMap: () => {
         return { message: 'Pilih salah satu' }
       }
     })
   })
   .superRefine(({ post, account_ib }, ctx) => {
-    if (post === PostEnum.client && !account_ib) {
+    if (post === 'client' && !account_ib) {
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['account_ib'],
@@ -99,7 +99,7 @@ const formDataReset = () => Object.assign(formData, inialFormState)
 
 const formSubmit = async () => {
   const data = validationZodSchema.parse(formData)
-  const payload = { ...data, account_ib: data.post === PostEnum.ib ? null : data.account_ib }
+  const payload = { ...data, account_ib: data.post === 'ib' ? null : data.account_ib }
   const result = await InvokeCommand<AccountType>('create_account', payload)
 
   return result

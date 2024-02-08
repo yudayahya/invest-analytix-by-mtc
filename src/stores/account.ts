@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { InvokeCommand } from '@/commands'
+import type { BankType, GenderType, PostType, StatusType } from '@/lib/config'
 
 type AccountIbType = {
   id: number
@@ -11,21 +12,21 @@ export type AccountType = {
   id: number
   full_name: string
   code: string
-  gender: string
+  gender: GenderType
   city: string | null
   email: string
   email_password: string
-  bank: string
+  bank: BankType
   bank_account_number: string
   internet_bank_account_number: string | null
-  post: string
+  post: PostType
   account_number: string
   account_password: string
   account_ib: number | null
   phone_number: string | null
   mac_address: string | null
   bonus: number | null
-  status: string
+  status: StatusType
   created_at: string
   updated_at: string
 }

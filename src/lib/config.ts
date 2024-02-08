@@ -1,75 +1,22 @@
-export const GenderConfig = [
-  {
-    value: 'male',
-    label: 'Laki-laki'
-  },
-  {
-    value: 'female',
-    label: 'Perempuan'
-  }
-]
+export const GenderEnum = ['male', 'female'] as const
+export const BankEnum = ['bca', 'bri', 'bni', 'mandiri'] as const
+export const PostEnum = ['ib', 'client'] as const
+export const StatusEnum = ['primary', 'verified', 'unverified', 'deactivated'] as const
 
-export const GenderEnum = Object.fromEntries(
-  GenderConfig.map((obj) => obj.value).map((value) => [value, value])
-)
+export type GenderType = (typeof GenderEnum)[number]
+export type BankType = (typeof BankEnum)[number]
+export type PostType = (typeof PostEnum)[number]
+export type StatusType = (typeof StatusEnum)[number]
 
-export const BankConfig = [
-  {
-    value: 'bca',
-    label: 'BCA'
-  },
-  {
-    value: 'bri',
-    label: 'BRI'
-  },
-  {
-    value: 'bni',
-    label: 'BNI'
-  },
-  {
-    value: 'mandiri',
-    label: 'Mandiri'
-  }
-]
-
-export const BankEnum = Object.fromEntries(
-  BankConfig.map((obj) => obj.value).map((value) => [value, value])
-)
-
-export const PostConfig = [
-  {
-    value: 'ib',
-    label: 'IB'
-  },
-  {
-    value: 'client',
-    label: 'Client'
-  }
-]
-
-export const PostEnum = Object.fromEntries(
-  PostConfig.map((obj) => obj.value).map((value) => [value, value])
-)
-
-export const StatusConfig = [
-  {
-    value: 'primary',
-    label: 'Primary'
-  },
-  {
-    value: 'verified',
-    label: 'Verified'
-  },
-  {
-    value: 'unverified',
-    label: 'Unverified'
-  },
-  {
-    value: 'deactivated',
-    label: 'Deactivated'
-  }
-]
-
-export const StatusEnum = Object.fromEntries(
-  StatusConfig.map((obj) => obj.value).map((value) => [value, value])
-)
+export const GenderConfig = GenderEnum.map((v) => {
+  return { value: v, label: v === 'male' ? 'Laki-laki' : 'Perempuan' }
+})
+export const BankConfig = BankEnum.map((v) => {
+  return { value: v, label: v.toUpperCase() }
+})
+export const PostConfig = PostEnum.map((v) => {
+  return { value: v, label: v.toUpperCase() }
+})
+export const StatusConfig = StatusEnum.map((v) => {
+  return { value: v, label: v.toUpperCase() }
+})
