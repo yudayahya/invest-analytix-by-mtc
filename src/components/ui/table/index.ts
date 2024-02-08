@@ -1,0 +1,8 @@
+export { default as Table } from './TableComponent.vue'
+export { default as TableBody } from './TableBodyComponent.vue'
+export { default as TableCell } from './TableCellComponent.vue'
+export { default as TableHead } from './TableHeadComponent.vue'
+export { default as TableHeader } from './TableHeaderComponent.vue'
+export { default as TableRow } from './TableRowComponent.vue'
+export { default as TableCaption } from './TableCaptionComponent.vue'
+export { default as TableEmpty } from './TableEmptyComponent.vue'
