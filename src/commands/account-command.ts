@@ -73,7 +73,7 @@ export const validationZodSchema = z
     }
   })
 
-const inialFormState = {
+const inialFormState: FormDataType = {
   full_name: null,
   code: null,
   gender: null,
