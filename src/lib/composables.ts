@@ -13,3 +13,23 @@ export const useDigitalClock = () => {
 
   return currentTime
 }
+
+export const formatDateTime = (dateTime: string) => dayjs(dateTime).format('YYYY-MM-DD HH:mm:ss')
+
+export const formatDollar = (amount: number) => {
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(amount)
+
+  return formatted
+}
+
+export const formatRupiah = (amount: number) => {
+  const formatted = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR'
+  }).format(amount)
+
+  return formatted
+}
