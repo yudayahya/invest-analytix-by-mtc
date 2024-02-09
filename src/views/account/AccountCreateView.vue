@@ -53,7 +53,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-screen-lg mx-auto py-6 px-2">
+  <div class="w-full max-w-screen-lg mx-auto py-8 px-2">
     <Form :validation-schema="validationSchema" @submit="onSubmit">
       <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div class="grid gap-2 auto-rows-max">
@@ -315,7 +315,7 @@ onMounted(() => {
       </div>
       <div class="w-full mt-6 pt-4 border-t flex justify-end items-center gap-x-2">
         <Button type="button" variant="secondary" @click="router.push({ name: 'account' })"
-          >Cancel</Button
+          >Back</Button
         >
         <Button :disabled="isLoading" type="submit">
           <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
