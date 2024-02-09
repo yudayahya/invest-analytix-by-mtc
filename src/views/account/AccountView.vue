@@ -3,7 +3,9 @@ import { useAccountStore } from '@/stores/account'
 import { onMounted } from 'vue'
 import { createAccountColumnDefinitions, accountColumnStruct } from './column-definition'
 import { DataTable } from '@/components/datatable'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const accountStore = useAccountStore()
 const accountColumnDefinitions = createAccountColumnDefinitions()
 
@@ -18,6 +20,8 @@ onMounted(() => {
       :columns="accountColumnDefinitions"
       :data="accountStore.accounts"
       :column-struct="accountColumnStruct"
+      :new-record-redirection="() => router.push({ name: 'account-create' })"
+      :delete-selected-row-fn="(rows) => console.log('Selected Rows:', rows)"
     />
   </div>
 </template>

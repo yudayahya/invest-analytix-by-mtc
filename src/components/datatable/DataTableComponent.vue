@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData, TValue">
-import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/vue-table'
+import type { ColumnDef, Row, SortingState, VisibilityState } from '@tanstack/vue-table'
 import { Button } from '@/components/ui/button'
 import { valueUpdater } from '@/lib/utils'
 import {
@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ref } from 'vue'
 import { Input } from '@/components/ui/input'
-import { Settings2 } from 'lucide-vue-next'
+import { Settings2, PlusCircle, Trash2 } from 'lucide-vue-next'
 import { DataTablePagination } from '.'
 
 export type ColumnStructType = {
@@ -42,6 +42,8 @@ const props = defineProps<{
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   columnStruct: ColumnStructType[]
+  newRecordRedirection: () => void
+  deleteSelectedRowFn: (row: Row<TData>[]) => void
 }>()
 
 const sorting = ref<SortingState>([])
@@ -84,13 +86,29 @@ const table = useVueTable({
 
 <template>
   <div>
-    <div class="flex items-center py-4">
-      <Input
-        class="max-w-sm h-8"
-        placeholder="Search..."
-        :model-value="table.getState().globalFilter || ''"
-        @update:model-value="table.setGlobalFilter($event)"
-      />
+    <div class="flex items-center justify-between py-4">
+      <div class="flex gap-x-4">
+        <Input
+          class="w-72 h-8"
+          placeholder="Search..."
+          :model-value="table.getState().globalFilter || ''"
+          @update:model-value="table.setGlobalFilter($event)"
+        />
+        <Button variant="secondary" class="ml-auto h-8" size="sm" @click="newRecordRedirection">
+          <PlusCircle class="mr-2 h-4 w-4" />
+          New
+        </Button>
+        <Button
+          v-if="table.getFilteredSelectedRowModel().rows.length > 0"
+          variant="destructive"
+          class="ml-auto h-8"
+          size="sm"
+          @click="deleteSelectedRowFn(table.getFilteredSelectedRowModel().rows)"
+        >
+          <Trash2 class="mr-2 h-4 w-4" />
+          Delete Selected Items
+        </Button>
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
           <Button variant="outline" class="ml-auto h-8" size="sm">
