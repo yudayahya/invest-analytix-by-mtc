@@ -14,7 +14,13 @@ type CommandResponse<T> = {
   data: T
 }
 
-const CommandList = ['sign_in', 'create_account', 'get_account', 'get_ib_account'] as const
+const CommandList = [
+  'sign_in',
+  'create_account',
+  'update_account',
+  'get_account',
+  'get_ib_account'
+] as const
 
 export const InvokeCommand = async <R>(command: (typeof CommandList)[number], data?: object) => {
   const result = await invoke<CommandResponse<R>>(command, {
