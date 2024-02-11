@@ -71,3 +71,37 @@ pub async fn create(data: ReqCreateAccountModel) -> Result<accounts::Model> {
 
     Ok(result)
 }
+
+pub async fn update(data: ReqCreateAccountModel) -> Result<bool> {
+    let db = establish_connection().await?;
+
+    let account = accounts::ActiveModel {
+        full_name: Set(data.full_name),
+        code: Set(data.code),
+        gender: Set(data.gender),
+        city: Set(data.city),
+        email: Set(data.email),
+        email_password: Set(data.email_password),
+        bank: Set(data.bank),
+        bank_account_number: Set(data.bank_account_number),
+        internet_bank_account_number: Set(data.internet_bank_account_number),
+        post: Set(data.post),
+        account_number: Set(data.account_number),
+        account_password: Set(data.account_password),
+        account_ib: Set(data.account_ib),
+        phone_number: Set(data.phone_number),
+        mac_address: Set(data.mac_address),
+        bonus: Set(data.bonus),
+        status: Set(data.status),
+        updated_at: Set(Some(Local::now().to_rfc3339())),
+        ..Default::default()
+    };
+
+    Accounts::update_many()
+        .set(account)
+        .filter(accounts::Column::Id.eq(data.id.unwrap()))
+        .exec(&db)
+        .await?;
+
+    Ok(true)
+}

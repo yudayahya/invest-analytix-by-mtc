@@ -40,3 +40,19 @@ pub async fn create_account(
         Err(_e) => Err(error("cannot create account".to_owned())),
     }
 }
+
+#[tauri::command]
+pub async fn update_account(
+    data: ReqCreateAccountModel,
+) -> Result<SuccessResponse<bool>, ErrorResponse> {
+    if data.id.is_none() {
+        return Err(error("id cannot be empty".to_owned()));
+    }
+
+    let result = account::update(data).await;
+
+    match result {
+        Ok(res) => Ok(success("success".to_owned(), res)),
+        Err(_e) => Err(error("cannot update account".to_owned())),
+    }
+}
