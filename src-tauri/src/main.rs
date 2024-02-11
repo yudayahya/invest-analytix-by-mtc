@@ -30,6 +30,7 @@ async fn main() {
             commands::account::get_account,
             commands::account::get_ib_account,
             commands::account::create_account,
+            commands::account::update_account,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
