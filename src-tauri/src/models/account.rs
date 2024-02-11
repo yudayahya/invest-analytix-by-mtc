@@ -3,6 +3,7 @@ use sea_orm::FromQueryResult;
 
 #[derive(serde::Deserialize)]
 pub struct ReqCreateAccountModel {
+    pub id: Option<i32>,
     pub full_name: String,
     pub code: String,
     pub gender: Option<String>,
