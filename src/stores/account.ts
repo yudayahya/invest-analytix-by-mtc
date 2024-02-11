@@ -8,7 +8,7 @@ type AccountIbType = {
   full_name: string
 }
 
-export type AccountType = {
+type Account = {
   id: number
   full_name: string
   code: string
@@ -30,6 +30,12 @@ export type AccountType = {
   created_at: string
   updated_at: string
 }
+
+type RelatedAccountIb = {
+  related_account_ib: Account | null
+}
+
+export type AccountType = Account & RelatedAccountIb
 
 export const useAccountStore = defineStore('account', () => {
   const accounts = ref<AccountType[]>([])
