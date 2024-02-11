@@ -41,23 +41,33 @@ export const createSelectionColumn = <T>(): ColumnDef<T> => {
   }
 }
 
-export const createActionColumn = <T>(
-  callbackDetail: (data: Row<T>) => void,
-  callbackDelete: (data: Row<T>) => void
-): ColumnDef<T> => {
+type actionCallback<T> = (row: Row<T>) => void | undefined
+
+type actionColumnOptions<T> = {
+  callbackDetail?: actionCallback<T>
+  callbackEdit?: actionCallback<T>
+  callbackDelete?: actionCallback<T>
+}
+
+type createActionColumnType = <T>(options: actionColumnOptions<T>) => ColumnDef<T>
+
+export const createActionColumn: createActionColumnType = ({
+  callbackDetail,
+  callbackEdit,
+  callbackDelete
+}) => {
   return {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const handleDetail = () => callbackDetail(row)
-      const handleDelete = () => callbackDelete(row)
-
       return h(
         'div',
         { class: 'relative text-center' },
         h(DataTableDropDown, {
-          handleDetail,
-          handleDelete
+          handleDetail:
+            typeof callbackDetail === 'function' ? () => callbackDetail(row) : undefined,
+          handleEdit: typeof callbackEdit === 'function' ? () => callbackEdit(row) : undefined,
+          handleDelete: typeof callbackDelete === 'function' ? () => callbackDelete(row) : undefined
         })
       )
     }

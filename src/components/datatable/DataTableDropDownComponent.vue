@@ -9,12 +9,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Trash2 } from 'lucide-vue-next'
-import { List } from 'lucide-vue-next'
+import { Trash2, List, Pencil } from 'lucide-vue-next'
 
 defineProps<{
-  handleDetail: () => void
-  handleDelete: () => void
+  handleDetail?: () => void
+  handleEdit?: () => void
+  handleDelete?: () => void
 }>()
 </script>
 
@@ -29,11 +29,15 @@ defineProps<{
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem @click="handleDetail">
+      <DropdownMenuItem v-if="handleDetail" @click="handleDetail">
         <List class="mr-2 h-4 w-4" />
         <span>Detail</span>
       </DropdownMenuItem>
-      <DropdownMenuItem @click="handleDelete">
+      <DropdownMenuItem v-if="handleEdit" @click="handleEdit">
+        <Pencil class="mr-2 h-4 w-4" />
+        <span>Ubah</span>
+      </DropdownMenuItem>
+      <DropdownMenuItem v-if="handleDelete" @click="handleDelete">
         <Trash2 class="mr-2 h-4 w-4" />
         <span>Hapus</span>
       </DropdownMenuItem>
