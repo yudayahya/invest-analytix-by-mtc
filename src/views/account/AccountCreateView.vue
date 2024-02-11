@@ -8,11 +8,12 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useToast } from '@/components/ui/toast'
 import { Input, InputCurrency, Select } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { GenderConfig, BankConfig, PostConfig, StatusConfig } from '@/lib/config'
 import { useAccountStore } from '@/stores/account'
 
 const router = useRouter()
+const route = useRoute()
 const { toast } = useToast()
 const accountStore = useAccountStore()
 
@@ -20,25 +21,56 @@ const isLoading = ref(false)
 
 const validationSchema = toTypedSchema(validationZodSchema)
 
+const setInitialFormData = () => {
+  const paramId = route.params.id as string
+  if (!paramId) return
+
+  const account = accountStore.accounts.find((account) => account.id === parseInt(paramId))
+  if (!account) return
+
+  formData.id = account.id
+  formData.full_name = account.full_name
+  formData.code = account.code
+  formData.gender = account.gender
+  formData.city = account.city
+  formData.email = account.email
+  formData.email_password = account.email_password
+  formData.bank = account.bank
+  formData.bank_account_number = account.bank_account_number
+  formData.internet_bank_account_number = account.internet_bank_account_number
+  formData.post = account.post
+  formData.account_number = account.account_number
+  formData.account_password = account.account_password
+  formData.account_ib = account.account_ib
+  formData.phone_number = account.phone_number
+  formData.mac_address = account.mac_address
+  formData.bonus = account.bonus
+  formData.status = account.status
+}
+
 const onSubmit = async () => {
   isLoading.value = true
 
   try {
+    const isUpdateProcess = formData.id ? true : false
+
     await accountCommand.formSubmit()
     await accountStore.fetch_accounts()
     await accountStore.fetch_account_ib_list()
     accountCommand.formDataReset()
     isLoading.value = false
 
-    return toast({
+    toast({
       title: 'Yeah!',
-      description: 'account successfully created',
+      description: isUpdateProcess ? 'Data berhasil diupdate' : 'Data berhasil ditambahkan',
       duration: 3000
     })
+
+    if (isUpdateProcess) router.push({ name: 'account' })
   } catch (error: any) {
     isLoading.value = false
 
-    return toast({
+    toast({
       title: 'Ooopps...',
       description: error.message || 'an uncaught error occurred',
       duration: 3000
@@ -47,8 +79,9 @@ const onSubmit = async () => {
 }
 
 onMounted(() => {
-  if (accountStore.account_ib_list.length !== 0) return
-  return accountStore.fetch_account_ib_list()
+  accountCommand.formDataReset()
+  if (accountStore.account_ib_list.length === 0) accountStore.fetch_account_ib_list()
+  setInitialFormData()
 })
 </script>
 
