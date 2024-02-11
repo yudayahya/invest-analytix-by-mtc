@@ -34,8 +34,6 @@ import { DataTablePagination } from '.'
 export type ColumnStructType = {
   key: string
   label: string
-  enableHiding?: boolean
-  enableSorting?: boolean
 }
 
 const props = defineProps<{
