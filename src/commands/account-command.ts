@@ -5,6 +5,7 @@ import { InvokeCommand } from '.'
 import type { AccountType } from '@/stores/account'
 
 type FormDataType = {
+  id: number | null
   full_name: string | null
   code: string | null
   gender: string | null
@@ -26,6 +27,7 @@ type FormDataType = {
 
 export const validationZodSchema = z
   .object({
+    id: z.number().nullable().optional(),
     full_name: z.string().min(1, { message: 'minimal 1 karakter' }),
     code: z.string().min(1, { message: 'minimal 1 karakter' }),
     gender: z.enum(GenderEnum, {
@@ -73,7 +75,8 @@ export const validationZodSchema = z
     }
   })
 
-const inialFormState: FormDataType = {
+const intialFormState: FormDataType = {
+  id: null,
   full_name: null,
   code: null,
   gender: null,
@@ -93,14 +96,17 @@ const inialFormState: FormDataType = {
   status: null
 }
 
-export const formData = reactive<FormDataType>({ ...inialFormState })
+export const formData = reactive<FormDataType>({ ...intialFormState })
 
-const formDataReset = () => Object.assign(formData, inialFormState)
+const formDataReset = () => Object.assign(formData, intialFormState)
 
 const formSubmit = async () => {
   const data = validationZodSchema.parse(formData)
   const payload = { ...data, account_ib: data.post === 'ib' ? null : data.account_ib }
-  const result = await InvokeCommand<AccountType>('create_account', payload)
+  const result = await InvokeCommand<AccountType>(
+    payload.id ? 'update_account' : 'create_account',
+    payload
+  )
 
   return result
 }
