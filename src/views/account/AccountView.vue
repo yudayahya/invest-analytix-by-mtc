@@ -7,7 +7,11 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const accountStore = useAccountStore()
-const accountColumnDefinitions = createAccountColumnDefinitions()
+const accountColumnDefinitions = createAccountColumnDefinitions({
+  callbackEdit: (row) => {
+    router.push({ name: 'account-edit', params: { id: row.original.id } })
+  }
+})
 
 onMounted(() => {
   accountStore.fetch_accounts()

@@ -1,7 +1,8 @@
 import {
   createActionColumn,
   createSelectionColumn,
-  createSortableHeader
+  createSortableHeader,
+  type actionColumnOptions
 } from '@/components/datatable'
 import type { ColumnStructType } from '@/components/datatable/DataTableComponent.vue'
 import { formatDateTime, formatDollar } from '@/lib/composables'
@@ -32,7 +33,9 @@ export const accountColumnStruct: ColumnStructType[] = [
   { key: 'updated_at', label: 'Updated at' }
 ]
 
-export const createAccountColumnDefinitions = (): ColumnDef<AccountType>[] => {
+export const createAccountColumnDefinitions = (
+  actionColumnOptions: actionColumnOptions<AccountType>
+): ColumnDef<AccountType>[] => {
   return [
     createSelectionColumn(),
     {
@@ -246,9 +249,6 @@ export const createAccountColumnDefinitions = (): ColumnDef<AccountType>[] => {
       enableHiding: true,
       enableSorting: true
     },
-    createActionColumn(
-      (data) => console.log('Detail', data.original.id),
-      (data) => console.log('Hapus', data.original.id)
-    )
+    createActionColumn(actionColumnOptions)
   ]
 }
