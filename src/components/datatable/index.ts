@@ -43,7 +43,7 @@ export const createSelectionColumn = <T>(): ColumnDef<T> => {
 
 type actionCallback<T> = (row: Row<T>) => void | undefined
 
-type actionColumnOptions<T> = {
+export type actionColumnOptions<T> = {
   callbackDetail?: actionCallback<T>
   callbackEdit?: actionCallback<T>
   callbackDelete?: actionCallback<T>
