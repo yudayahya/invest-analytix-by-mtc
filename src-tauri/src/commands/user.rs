@@ -2,21 +2,9 @@ use entity::users::Model;
 
 use crate::{
     libs::response::{error, success, ErrorResponse, SuccessResponse},
+    models::user::{CreateUserReq, UserRes},
     repositories::user,
 };
-
-#[derive(serde::Deserialize)]
-pub struct CreateUserReq {
-    email: String,
-    password: String,
-}
-
-#[derive(serde::Serialize)]
-pub struct UserRes {
-    id: i32,
-    email: String,
-    created_at: Option<String>,
-}
 
 #[tauri::command]
 pub async fn sign_in(data: CreateUserReq) -> Result<SuccessResponse<UserRes>, ErrorResponse> {

@@ -1,43 +1,20 @@
-use crate::libs::db::establish_connection;
+use crate::{
+    libs::db::establish_connection,
+    models::account::{AccountIbModel, ReqCreateAccountModel},
+};
 use chrono::Local;
 use entity::{accounts, prelude::Accounts};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, Condition, EntityTrait, FromQueryResult, QueryFilter,
-    QueryOrder, QuerySelect, QueryTrait, Set,
+    ActiveModelTrait, ColumnTrait, Condition, EntityTrait, QueryFilter, QueryOrder, QuerySelect,
+    QueryTrait, Set,
 };
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
-#[derive(serde::Deserialize)]
-pub struct CreateAccountStruct {
-    full_name: String,
-    code: String,
-    gender: Option<String>,
-    city: Option<String>,
-    email: String,
-    email_password: String,
-    bank: Option<String>,
-    bank_account_number: String,
-    internet_bank_account_number: Option<String>,
-    post: Option<String>,
-    account_number: String,
-    account_password: String,
-    account_ib: Option<i32>,
-    phone_number: Option<String>,
-    mac_address: Option<String>,
-    bonus: Option<f64>,
-    status: Option<String>,
-}
-
-#[derive(FromQueryResult, serde::Serialize)]
-pub struct PartialIbAccount {
-    pub id: i32,
-    pub full_name: String,
-}
-
-pub async fn get_all() -> Result<Vec<accounts::Model>> {
+pub async fn get_all() -> Result<Vec<(accounts::Model, Option<accounts::Model>)>> {
     let db = establish_connection().await?;
     let result = Accounts::find()
+        .find_also_linked(accounts::SelfReferencingLink)
         .order_by_desc(accounts::Column::Id)
         .apply_if(Some(200), QuerySelect::limit)
         .all(&db)
@@ -46,7 +23,7 @@ pub async fn get_all() -> Result<Vec<accounts::Model>> {
     Ok(result)
 }
 
-pub async fn get_ib_accounts() -> Result<Vec<PartialIbAccount>> {
+pub async fn get_ib_accounts() -> Result<Vec<AccountIbModel>> {
     let db = establish_connection().await?;
     let result = Accounts::find()
         .select_only()
@@ -57,14 +34,14 @@ pub async fn get_ib_accounts() -> Result<Vec<PartialIbAccount>> {
                 .add(accounts::Column::Status.is_not_in(vec![accounts::Status::Deactivated])),
         )
         .order_by_desc(accounts::Column::Id)
-        .into_model::<PartialIbAccount>()
+        .into_model::<AccountIbModel>()
         .all(&db)
         .await?;
 
     Ok(result)
 }
 
-pub async fn create(data: CreateAccountStruct) -> Result<accounts::Model> {
+pub async fn create(data: ReqCreateAccountModel) -> Result<accounts::Model> {
     let db = establish_connection().await?;
 
     let account = accounts::ActiveModel {

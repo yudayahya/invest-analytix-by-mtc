@@ -5,6 +5,7 @@ use tauri::Manager;
 
 mod commands;
 mod libs;
+mod models;
 mod repositories;
 
 #[tokio::main]
